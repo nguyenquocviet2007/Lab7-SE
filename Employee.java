@@ -15,6 +15,12 @@ public class Employee{
         this.permits = permits;
     }
     //public String toString(){};
+    public void setPhone(String phone){
+        this.phone = phone;
+    }
+    public void setPermit(Permit newPermit) {
+        this.permits.add(newPermit);
+    };
     public String getID(){
         return id;
     }
