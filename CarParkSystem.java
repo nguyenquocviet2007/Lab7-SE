@@ -35,6 +35,66 @@ public class CarParkSystem {
         }
         return permits;
     }
+    //use case 1
+    public void addEmployee(String id, String name, String phone) throws Exception{
+        boolean pre = (searchEmployee(id) == null);
+        if(!pre){
+            String message = "Error!!! Employee is already exist";
+            System.out.println(message);
+            throw new Exception(message);
+        }
+        Employee newEmployee = new Employee(id, name, phone, new HashSet<Permit>());
+        employeeList.add(newEmployee);
+    }
+    //use case 2
+    public void updateEmployeePhoneNr(String id, String phone) throws Exception{
+        boolean pre = (searchEmployee(id) != null);
+        if(!pre){
+            String message = "Error!!! Employee is not exist";
+            System.out.println(message);
+            throw new Exception(message);
+        }
+        Employee employee = searchEmployee(id);
+        employee.setPhone(phone);
+    }
+    //use case 3
+    public void addPermit(String permitNr, String regNr, String id) throws Exception{
+    	boolean newPermitNr = true;
+    	Iterator<Permit> itr = allPermits.iterator();
+    	while (itr.hasNext()){
+            Permit permits = (Permit) itr.next();
+            if (permits.getRegNr().equals(regNr)){
+                newPermitNr = false;
+            }
+        }
+        boolean pre = (searchPermit(permitNr) == null && newPermitNr && searchEmployee(id) != null && searchEmployee(id).getPermits().size() < 2);
+        
+        if(!pre){
+            String message = "Error!!! Employee is not exist or have more than 2 permits or permit is already exist";
+            System.out.println(message);
+            throw new Exception(message);
+        }
+        Employee owner = searchEmployee(id);
+        Permit p = new Permit(permitNr, regNr, owner);
+        owner.setPermit(p);
+        allPermits.add(p);
+    }
+    //use case 4
+    public void deleteEmployee(String id) throws Exception{
+    	
+        boolean pre = (searchEmployee(id) != null);
+        
+        if(!pre){
+            String message = "Error!!! Employee is not exist";
+            System.out.println(message);
+            throw new Exception(message);
+        }
+        Employee e = searchEmployee(id);
+        Set<Permit> employeePermits = e.getPermits();
+        
+        allPermits.removeAll(employeePermits);
+        employeeList.remove(e);
+    }
     //use case 5
     public void removePermits(String permitNr) throws Exception{
         boolean pre = (searchPermit(permitNr) != null);
